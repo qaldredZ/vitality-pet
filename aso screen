@@ -1,0 +1,441 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const PetStepTrackerApp());
+}
+
+class PetStepTrackerApp extends StatelessWidget {
+  const PetStepTrackerApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Pet Step Tracker',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Nunito',
+        scaffoldBackgroundColor: const Color(0xFFF0F4E8),
+      ),
+      home: const PetTrackerScreen(),
+    );
+  }
+}
+
+class PetTrackerScreen extends StatelessWidget {
+  const PetTrackerScreen({super.key});
+
+  static const String petName = 'Browny';
+  static const int currentSteps = 2000;
+  static const int dailyGoal = 5000;
+  static const List<int> milestones = [0, 2000, 20000, 35000, 50000];
+
+  static const String dogImagePath = 'assets/images/dog.png';
+
+  @override
+  Widget build(BuildContext context) {
+    final double progressFraction =
+    (currentSteps / milestones.last).clamp(0.0, 1.0);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF0F4E8),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ProgressBarSection(
+                milestones: milestones,
+                progressFraction: progressFraction,
+              ),
+              const SizedBox(height: 20),
+              _PetCard(
+                petName: petName,
+                dogImagePath: dogImagePath,
+              ),
+              const SizedBox(height: 20),
+              _StepsTodayCard(steps: currentSteps),
+              const SizedBox(height: 14),
+              _InfoCard(
+                title: '$petName is feeling Vibrant!',
+                subtitle: 'Do your daily goals to maintain your pet\'s energy.',
+                dogImagePath: dogImagePath,
+                backgroundColor: const Color(0xFFFFFDE7),
+                borderColor: const Color(0xFFFFD54F),
+              ),
+              const SizedBox(height: 12),
+              _InfoCard(
+                title: 'Daily Goal: $currentSteps/$dailyGoal Steps.',
+                subtitle: 'Please complete your daily goals to earn rewards.',
+                dogImagePath: dogImagePath,
+                backgroundColor: const Color(0xFFE8F5E9),
+                borderColor: const Color(0xFF81C784),
+              ),
+              const SizedBox(height: 20),
+              const _RewardCard(),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProgressBarSection extends StatelessWidget {
+  const _ProgressBarSection({
+    required this.milestones,
+    required this.progressFraction,
+  });
+
+  final List<int> milestones;
+  final double progressFraction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: milestones.map((m) {
+                  final bool reached =
+                      m <= (progressFraction * milestones.last);
+                  return _MilestoneDot(reached: reached);
+                }).toList(),
+              ),
+              const SizedBox(height: 6),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: progressFraction,
+                  minHeight: 14,
+                  backgroundColor: const Color(0xFFDDE8C8),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    Color(0xFF8BC34A),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: milestones.map((m) {
+                  return Text(
+                    m == 0 ? '0' : _formatNumber(m),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFF7A8B6F),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFDDE8C8),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: const EdgeInsets.all(6),
+            child: const Icon(Icons.settings, size: 20, color: Color(0xFF5D7A4A)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatNumber(int n) {
+    if (n >= 1000) return '${(n / 1000).toStringAsFixed(0)}k';
+    return n.toString();
+  }
+}
+
+class _MilestoneDot extends StatelessWidget {
+  const _MilestoneDot({required this.reached});
+  final bool reached;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 10,
+      height: 10,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: reached ? const Color(0xFF8BC34A) : const Color(0xFFBBCCA0),
+        border: Border.all(color: Colors.white, width: 1.5),
+      ),
+    );
+  }
+}
+
+class _PetCard extends StatelessWidget {
+  const _PetCard({required this.petName, required this.dogImagePath});
+
+  final String petName;
+  final String dogImagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE6EDD6),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 140,
+            child: _DogImage(imagePath: dogImagePath),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                petName,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF4A6030),
+                ),
+              ),
+              const SizedBox(width: 6),
+              const Icon(Icons.pets, size: 18, color: Color(0xFF8BC34A)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DogImage extends StatelessWidget {
+  const _DogImage({required this.imagePath});
+  final String imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      imagePath,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) {
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFA30613),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const Center(
+            child: Text('🐶', style: TextStyle(fontSize: 80)),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _StepsTodayCard extends StatelessWidget {
+  const _StepsTodayCard({required this.steps});
+  final int steps;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Steps today',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF7A8B6F),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8BC34A),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  '100',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            steps.toString(),
+            style: const TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF3D5A27),
+              height: 1.1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({
+    required this.title,
+    required this.subtitle,
+    required this.dogImagePath,
+    required this.backgroundColor,
+    required this.borderColor,
+  });
+
+  final String title;
+  final String subtitle;
+  final String dogImagePath;
+  final Color backgroundColor;
+  final Color borderColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor, width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13.5,
+                    color: Color(0xFF3D5A27),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF7A8B6F),
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SizedBox(
+              width: 52,
+              height: 52,
+              child: _DogImage(imagePath: dogImagePath),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RewardCard extends StatelessWidget {
+  const _RewardCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: const Color(0xFF8BC34A),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+}
+
+
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF0F4E8),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFDDE8C8),
+        elevation: 0,
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+            color: Color(0xFF3D5A27),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFF3D5A27)),
+      ),
+      body: const Center(
+        child: Text(
+          'Settings coming soon!',
+          style: TextStyle(
+            fontSize: 16,
+            color: Color(0xFF7A8B6F),
+          ),
+        ),
+      ),
+    );
+  }
+}
