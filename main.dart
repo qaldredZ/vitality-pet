@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group3hci/login.dart';
-import 'package:group3hci/signup.dart';
+import 'package:fluttervitalityapp/login.dart';
+import  'package:fluttervitalityapp/signup.dart';
 
 void main() {
   runApp(const MyApp());
