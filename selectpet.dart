@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
+import 'package:fluttervitalityapp/cat.dart';
 void main() {
   runApp(const VitalityPetApp());
 }
@@ -243,7 +243,7 @@ class _PetCard extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child:
-                      const Icon(Icons.check, size: 13, color: Colors.white),
+                  const Icon(Icons.check, size: 13, color: Colors.white),
                 ),
               ),
           ],
@@ -324,7 +324,7 @@ class _EggHatchScreenState extends State<EggHatchScreen>
             // Floating + wobbling egg
             AnimatedBuilder(
               animation:
-                  Listenable.merge([_floatController, _wobbleController]),
+              Listenable.merge([_floatController, _wobbleController]),
               builder: (context, child) {
                 return Transform.translate(
                   offset: Offset(0, _floatAnimation.value),
@@ -381,7 +381,12 @@ class _EggHatchScreenState extends State<EggHatchScreen>
       width: double.infinity,
       height: 54,
       child: ElevatedButton(
-        onPressed: _onHatch,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyScreen()),
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF7A8C5A),
           foregroundColor: const Color(0xFFE8E4C8),
