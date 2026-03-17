@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group3hci/main.dart';
+import 'package:fluttervitalityapp/main.dart';
+import 'package:fluttervitalityapp/selectpet.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -73,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           isPassword: true,
                           obscureText: _obscurePassword,
                           onEyePressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword,
+                                () => _obscurePassword = !_obscurePassword,
                           ),
                         ),
 
@@ -86,8 +87,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           isPassword: true,
                           obscureText: _obscureConfirmPassword,
                           onEyePressed: () => setState(
-                            () => _obscureConfirmPassword =
-                                !_obscureConfirmPassword,
+                                () => _obscureConfirmPassword =
+                            !_obscureConfirmPassword,
                           ),
                         ),
 
@@ -99,7 +100,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           height: 52,
                           child: ElevatedButton(
                             onPressed: () {
-                              // Sign up logic goes here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => VitalityPetApp()),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF433D35),
@@ -163,8 +167,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           MaterialPageRoute(
                             builder: (context) => OpeningScreen(),
                           ),
-                          (Route<dynamic> route) =>
-                              false, // This clears the entire history stack
+                              (Route<dynamic> route) =>
+                          false, // This clears the entire history stack
                         );
                       },
                     ),
@@ -198,12 +202,12 @@ class _SignupScreenState extends State<SignupScreen> {
           prefixIcon: Icon(icon, color: const Color(0xFF433D35), size: 20),
           suffixIcon: isPassword
               ? IconButton(
-                  icon: Icon(
-                    obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: const Color(0xFF433D35),
-                  ),
-                  onPressed: onEyePressed,
-                )
+            icon: Icon(
+              obscureText ? Icons.visibility : Icons.visibility_off,
+              color: const Color(0xFF433D35),
+            ),
+            onPressed: onEyePressed,
+          )
               : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
