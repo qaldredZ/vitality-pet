@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group3hci/signup.dart';
-import 'package:group3hci/main.dart';
+import  'package:fluttervitalityapp/signup.dart';
+import 'package:fluttervitalityapp/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => OpeningScreen()),
-                  (Route<dynamic> route) =>
-                      false, // This clears the entire history stack
+                      (Route<dynamic> route) =>
+                  false, // This clears the entire history stack
                 );
               },
             ),
@@ -188,12 +188,12 @@ class _LoginScreenState extends State<LoginScreen> {
           prefixIcon: Icon(icon, color: const Color(0xB8000000), size: 20),
           suffixIcon: isPassword
               ? IconButton(
-                  icon: Icon(
-                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: const Color(0xFF433D35),
-                  ),
-                  onPressed: onToggleVisibility,
-                )
+            icon: Icon(
+              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: const Color(0xFF433D35),
+            ),
+            onPressed: onToggleVisibility,
+          )
               : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
